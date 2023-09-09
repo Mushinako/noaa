@@ -1,0 +1,9 @@
+# Data
+noaa.db
+
+# VS Code
+.vscode/
+
+# Python
+**/__pycache__/
+venv/
