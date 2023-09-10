@@ -1,7 +1,10 @@
+# pyright: reportMissingTypeStubs=false
+
 from __future__ import annotations
 
 from datetime import date
 
+from geoalchemy2 import Geometry
 from sqlalchemy import Date, ForeignKey, String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
@@ -49,3 +52,4 @@ class StationInfo(_Base):
     province: Mapped[None | str] = mapped_column(String(20), nullable=True)
     city: Mapped[None | str] = mapped_column(String(20), nullable=True)
     district: Mapped[None | str] = mapped_column(String(20), nullable=True)
+    geom = mapped_column(Geometry(geometry_type="POINT", srid=4326), nullable=True)

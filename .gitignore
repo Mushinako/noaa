@@ -1,5 +1,6 @@
 # Data
 noaa.db
+noaa.backup.db
 
 # VS Code
 .vscode/
