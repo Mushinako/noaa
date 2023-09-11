@@ -5,7 +5,6 @@ import datetime
 import math
 from typing import TYPE_CHECKING
 
-from geoalchemy2 import load_spatialite  # pyright: ignore
 from sqlalchemy import create_engine
 from sqlalchemy import func as f
 from sqlalchemy import select
