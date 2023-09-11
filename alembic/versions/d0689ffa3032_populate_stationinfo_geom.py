@@ -5,12 +5,16 @@ Revises: 06689123a38f
 Create Date: 2023-09-10 14:44:00.231247
 
 """
+# pyright: reportMissingTypeStubs=false
+
 from typing import Sequence, Union
 
+import geoalchemy2 as ga
 from sqlalchemy.orm import Session
+from sqlalchemy.sql import functions
 
 from alembic import op
-from utils.models import StationInfo
+from utils.models import StationInfoGis
 
 # revision identifiers, used by Alembic.
 revision: str = "d0689ffa3032"
@@ -22,16 +26,19 @@ depends_on: Union[str, Sequence[str], None] = None
 def upgrade() -> None:
     bind = op.get_bind()
     with Session(bind=bind) as session:
-        op.execute(
-            session.query(StationInfo)
-            .filter(
-                StationInfo.country == "中国",
-                StationInfo.latitude.is_not(None),
-                StationInfo.longitude.is_not(None),
-            )
-            .update()
+        stations = session.query(StationInfoGis).filter(
+            StationInfoGis.latitude.is_not(None), StationInfoGis.longitude.is_not(None)
         )
 
 
 def downgrade() -> None:
-    pass
+    bind = op.get_bind()
+    with Session(bind=bind) as session:
+        (
+            session.query(StationInfoGis)
+            .filter(
+                StationInfoGis.latitude.is_not(None),
+                StationInfoGis.longitude.is_not(None),
+            )
+            .update({"geom": None})
+        )

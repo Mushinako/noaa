@@ -7,7 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-GeoAlchemy2 = "^0.14.1"
+GeoAlchemy2 = {extras = ["shapely"], version = "^0.14.1"}
 SQLAlchemy = "^2.0.20"
 alembic = "^1.12.0"
 

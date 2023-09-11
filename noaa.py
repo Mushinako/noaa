@@ -5,12 +5,12 @@ import datetime
 from typing import TYPE_CHECKING
 
 from geoalchemy2 import load_spatialite  # pyright: ignore
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, select
 from sqlalchemy.event import listen
 from sqlalchemy.orm import Session
 
 from utils.argparse import parse_argv
-from utils.models import Data, StationInfo
+from utils.models import Data, DataGis, StationInfo, StationInfoGis
 
 if TYPE_CHECKING:
     from sqlalchemy.engine.base import Engine
@@ -35,30 +35,43 @@ class _Runner:
         self.date = datetime.date.today() if date is None else date
         self.engine = create_engine(_DB, echo=True)
 
-    def process_data(self, *, force_update: bool = False) -> None:
+    def search_trig(self) -> Data:
         """"""
-        with self.engine.connect() as conn:
-            load_spatialite(conn)
-
-    def search(self) -> Data:
-        """"""
-        listen(self.engine, "connect", load_spatialite)  # pyright: ignore
         with Session(self.engine) as session:
             with session.begin():
-                all_station_q = session.query(StationInfo).filter(
+                cn_stations_stmt = select(StationInfo).where(
                     StationInfo.country == "中国",
                     StationInfo.latitude.is_not(None),
                     StationInfo.longitude.is_not(None),
                 )
+                station_stmt = cn_stations_stmt.limit(1)
+                station = session.scalars(station_stmt).first()
+                if station is None:
+                    raise ValueError("No station found")
+
+    def search_gis(self) -> DataGis:
+        """"""
+        raise NotImplementedError
+        listen(self.engine, "connect", load_spatialite)  # pyright: ignore
+        with Session(self.engine) as session:
+            with session.begin():
+                cn_stations_stmt = select(StationInfoGis).where(
+                    StationInfoGis.country == "中国",
+                    StationInfoGis.latitude.is_not(None),
+                    StationInfoGis.longitude.is_not(None),
+                )
+                station_stmt = cn_stations_stmt
+                station = session.scalars(station_stmt).first()
+                if station is None:
+                    raise ValueError("No station found")
 
 
 def _main() -> None:
     """"""
     args = parse_argv()
     runner = _Runner(lat=args.lat, lon=args.lon, date=args.date)
-    runner.process_data()
-    result = runner.search()
-    # print(f'Closest wind speed is {data.wdsp} for station "{data.station_info.name}"')
+    result = runner.search_trig()
+    print(f'Closest wind speed is {data.wdsp} for station "{data.station_info.name}"')
 
 
 if __name__ == "__main__":
