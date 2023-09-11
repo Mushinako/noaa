@@ -95,19 +95,19 @@ files = [
 ]
 
 [[package]]
-name = "exif"
-version = "1.6.0"
-description = "Read and modify image EXIF metadata using Python."
+name = "exifread"
+version = "3.0.0"
+description = "Read Exif metadata from tiff and jpeg files."
 category = "main"
 optional = false
-python-versions = ">=3.7"
+python-versions = "*"
 files = [
-    {file = "exif-1.6.0-py3-none-any.whl", hash = "sha256:2d002b5740eb897da43de1e6a8f4ebacf5171b4d0b8bc0182c70aebde1be86d3"},
-    {file = "exif-1.6.0.tar.gz", hash = "sha256:36288d1ffc60030084a04c26f50cc32e19383a36cd234fcfa1fb1c6f698e1d36"},
+    {file = "ExifRead-3.0.0-py3-none-any.whl", hash = "sha256:2c5c59ef03b3bbee75b82b82d2498006b3c13509f35c9a76c7552faff73fa2d5"},
+    {file = "ExifRead-3.0.0.tar.gz", hash = "sha256:0ac5a364169dbdf2bd62f94f5c073970ab6694a3166177f5e448b10c943e2ca4"},
 ]
 
-[package.dependencies]
-plum-py = ">=0.5.0,<2.0.0"
+[package.extras]
+dev = ["mypy (==0.950)", "pylint (==2.13.8)"]
 
 [[package]]
 name = "geoalchemy2"
@@ -403,17 +403,6 @@ docs = ["furo (>=2023.7.26)", "proselint (>=0.13)", "sphinx (>=7.1.1)", "sphinx-
 test = ["appdirs (==1.4.4)", "covdefaults (>=2.3)", "pytest (>=7.4)", "pytest-cov (>=4.1)", "pytest-mock (>=3.11.1)"]
 
 [[package]]
-name = "plum-py"
-version = "0.8.7"
-description = "Pack/Unpack Memory."
-category = "main"
-optional = false
-python-versions = ">=3.6"
-files = [
-    {file = "plum_py-0.8.7-py3-none-any.whl", hash = "sha256:d791f059ef159adbe3c3b036557b5b431fa07db226a9de106a74e5e57441741d"},
-]
-
-[[package]]
 name = "shapely"
 version = "2.0.1"
 description = "Manipulation and analysis of geometric objects"
@@ -574,4 +563,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "20a7cbdac435442d8dbb5eb620cdce444f150aaddb6d3f833b167e0bc1687ac4"
+content-hash = "cbab48499b43515ed0379e1e30ad0f294772f2d7aa8d591776da47e490318148"

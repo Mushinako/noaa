@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session
 
 from utils.argparse import parse_argv
 from utils.models_gis import DataGis, StationInfoGis
+from utils.pic_parse import get_pic_metadata
 
 if TYPE_CHECKING:
     from sqlalchemy.engine.base import Engine
@@ -56,7 +57,8 @@ class _Runner:
 def _main() -> None:
     """"""
     args = parse_argv()
-    runner = _Runner(lat=args.lat, lon=args.lon, date=args.date)
+    metadata = get_pic_metadata(args.path)
+    runner = _Runner(lat=metadata.lat, lon=metadata.lon, date=metadata.datetime.date())
     with Session(runner.engine) as session:
         with session.begin():
             result = runner.search(session)
