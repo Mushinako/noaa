@@ -20,7 +20,7 @@ if TYPE_CHECKING:
     from collections.abc import Generator
 
     from sqlalchemy.engine.base import Engine
-    from sqlalchemy.sql.elements import ColumnElement
+    from sqlalchemy.sql.elements import SQLCoreOperations
 
     from utils.models_base import DataMixin, StationInfoMixin
 
@@ -77,11 +77,11 @@ class BaseSearchEngine(ABC, Generic[_DataModel, _StationInfoModel]):
         return data
 
     @abstractmethod
-    def get_distance_comp(self) -> ColumnElement[float]:
+    def get_distance_comp(self) -> SQLCoreOperations[None | float]:
         """"""
         raise NotImplementedError
 
-    def get_day_comp(self) -> ColumnElement[float]:
+    def get_day_comp(self) -> SQLCoreOperations[float]:
         """"""
         return f.abs(f.julianday(self.date) - f.julianday(self.DataModel.date))
 
@@ -100,3 +100,6 @@ class BaseRunner(ABC, Generic[_SearchEngine]):
         with runner.get_session() as session:
             result = runner.search(session, include_null_wdsp=args.include_null_wdsp)
             print(result.human_str)
+            distance = result.station_info.get_distance(lat=exif.lat, lon=exif.lon)
+            if distance is not None:
+                print(f"The distance to the station is {distance:,.3f} km")

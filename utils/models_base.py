@@ -2,11 +2,15 @@
 
 from __future__ import annotations
 
+import math as m
 from datetime import date
 from typing import Any, Generic, TypeVar
 
 from sqlalchemy import Date, ForeignKey, String
+from sqlalchemy.ext.hybrid import hybrid_method
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+
+from .config import CONFIG
 
 _DataModel = TypeVar("_DataModel", bound="DataMixin[Any]")
 _StationInfoModel = TypeVar("_StationInfoModel", bound="StationInfoMixin[Any]")
@@ -75,3 +79,26 @@ class StationInfoMixin(_Base, Generic[_DataModel]):
             f"lat={self.latitude}, lon={self.longitude}, country={self.country}, "
             f"province={self.province}, city={self.city}, district={self.district})"
         )
+
+    def _calc_distance(self, *, lat: float, lon: float) -> None | float:
+        """"""
+        if self.latitude is None or self.longitude is None:
+            return None
+        # a = sin^2(|lat1-lat2|/2) + sin^2(|lon1-lon2|/2) * cos(lat1) * cos(lat2)
+        lat_diff = abs(m.radians(self.latitude) - m.radians(lat))
+        distance_a_lat = m.sin(lat_diff / 2) ** 2
+        lon_diff = abs(m.radians(self.longitude) - m.radians(lon))
+        distance_a_lon = (
+            m.sin(lon_diff / 2) ** 2
+            * m.cos(m.radians(self.latitude))
+            * m.cos(m.radians(lat))
+        )
+        distance_a = distance_a_lat + distance_a_lon
+        # radian = atan(sqrt(a/(1-a))) * 2
+        distance_rad = m.atan(m.sqrt(distance_a / (1 - distance_a))) * 2
+        return distance_rad * CONFIG.earth_radius
+
+    @hybrid_method
+    def get_distance(self, *, lat: float, lon: float) -> None | float:
+        """"""
+        return self._calc_distance(lat=lat, lon=lon)

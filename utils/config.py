@@ -14,6 +14,7 @@ _CONFIG_PATH = BASE_DIR / "config.yml"
 @dataclass(frozen=True)
 class _Config:
     db_url: str
+    earth_radius: float
 
 
 def _get_config() -> _Config:

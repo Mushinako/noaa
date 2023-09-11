@@ -10,7 +10,7 @@ from utils.base import BaseRunner, BaseSearchEngine
 from utils.models_gis import DataGis, StationInfoGis
 
 if TYPE_CHECKING:
-    from sqlalchemy.sql.elements import ColumnElement
+    from sqlalchemy.sql.elements import SQLCoreOperations
 
 
 class _GisSearchEngine(BaseSearchEngine[DataGis, StationInfoGis]):
@@ -19,7 +19,7 @@ class _GisSearchEngine(BaseSearchEngine[DataGis, StationInfoGis]):
     DataModel = DataGis
     StationInfoModel = StationInfoGis
 
-    def get_distance_comp(self) -> ColumnElement[float]:
+    def get_distance_comp(self) -> SQLCoreOperations[None | float]:
         """"""
         raise NotImplementedError
 

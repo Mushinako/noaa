@@ -1,1 +1,2 @@
 db_url: sqlite:///noaa.db
+earth_radius: 6371
