@@ -19,6 +19,6 @@ def parse_argv() -> _Args:
     """"""
     parser = ArgumentParser()
 
-    parser.add_argument("path", type=_valid_path, help="Picture path", required=True)
+    parser.add_argument("path", type=_valid_path, help="Picture path")
 
     return parser.parse_args(namespace=_Args())
