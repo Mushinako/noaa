@@ -1,8 +1,12 @@
 # NOAA
 
+## How to use
+
+`python noaa_trig.py --lat 22.6368375 --lon 113.8144431 --date 2000-01-01`
+
 ## Prerequisites
 
-* Poetry
+* Poetry (optional; for dependencies)
 
 ## Prerequisites for GIS
 
