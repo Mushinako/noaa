@@ -45,6 +45,13 @@ class DataMixin(_Base, Generic[_StationInfoModel]):
             f"date={self.date.isoformat()})"
         )
 
+    @property
+    def human_str(self) -> str:
+        """"""
+        wdsp_str = "not available" if self.wdsp is None else str(self.wdsp)
+        station = self.station_info.name or self.station or "closest"
+        return f'The wind speed is {wdsp_str} for "{station}" station on {self.date:%x}'
+
 
 class StationInfoMixin(_Base, Generic[_DataModel]):
     __abstract__ = True

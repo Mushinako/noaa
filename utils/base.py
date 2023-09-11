@@ -55,20 +55,22 @@ class BaseSearchEngine(ABC, Generic[_DataModel, _StationInfoModel]):
             with session.begin():
                 yield session
 
-    def search(self, session: Session) -> _DataModel:
-        cn_stations_stmt = select(self.StationInfoModel).where(
+    def search(
+        self, session: Session, *, include_null_wdsp: bool = False
+    ) -> _DataModel:
+        stations_stmt = select(self.StationInfoModel).where(
             self.StationInfoModel.country == "中国",
             self.StationInfoModel.latitude.is_not(None),
             self.StationInfoModel.longitude.is_not(None),
         )
-        station_stmt = cn_stations_stmt.order_by(self.get_distance_comp()).limit(1)
+        station_stmt = stations_stmt.order_by(self.get_distance_comp()).limit(1)
         station = session.scalars(station_stmt).first()
         if station is None:
             raise ValueError("No station found")
-        station_data_stmt = select(self.DataModel).where(
-            self.DataModel.station_info == station,
-        )
-        data_stmt = station_data_stmt.order_by(self.get_day_comp()).limit(1)
+        data_stmt = select(self.DataModel).where(self.DataModel.station_info == station)
+        if not include_null_wdsp:
+            data_stmt = data_stmt.where(self.DataModel.wdsp.is_not(None))
+        data_stmt = data_stmt.order_by(self.get_day_comp()).limit(1)
         data = session.scalars(data_stmt).first()
         if data is None:
             raise ValueError("No data found")
@@ -93,10 +95,8 @@ class BaseRunner(ABC, Generic[_SearchEngine]):
         """"""
         args = parse_argv()
         exif = Exif(args.path)
+        print(exif.human_str)
         runner = self.SearchEngineClass(lat=exif.lat, lon=exif.lon, date=exif.date)
         with runner.get_session() as session:
-            result = runner.search(session)
-            print(
-                f"The wind speed is {result.wdsp} for closest station "
-                f'"{result.station_info.name}" on {result.date.isoformat()}'
-            )
+            result = runner.search(session, include_null_wdsp=args.include_null_wdsp)
+            print(result.human_str)

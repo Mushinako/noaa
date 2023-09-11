@@ -160,3 +160,11 @@ class Exif:
     def date(self) -> datetime.date:
         """"""
         return self.datetime.date()
+
+    @property
+    def human_str(self) -> str:
+        """"""
+        return (
+            f"The picture is taken at date={self.date:%x}, time={self.datetime:%X}, "
+            f"lat={self.lat:.3f}, lon={self.lon:.3f}"
+        )
