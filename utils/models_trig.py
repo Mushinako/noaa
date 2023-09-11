@@ -47,7 +47,7 @@ class StationInfo(StationInfoMixin["Data"]):
         )
         distance_a = distance_a_lat + distance_a_lon
         # radian = atan(sqrt(a/(1-a))) * 2
-        distance_rad = f.atan(f.sqrt(distance_a / (1 - distance_a))) * 2
+        distance_rad = f.atan2(f.sqrt(distance_a), f.sqrt(1 - distance_a)) * 2
         distance = distance_rad * CONFIG.earth_radius
 
         return case(

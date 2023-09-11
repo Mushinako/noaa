@@ -95,7 +95,7 @@ class StationInfoMixin(_Base, Generic[_DataModel]):
         )
         distance_a = distance_a_lat + distance_a_lon
         # radian = atan(sqrt(a/(1-a))) * 2
-        distance_rad = m.atan(m.sqrt(distance_a / (1 - distance_a))) * 2
+        distance_rad = m.atan2(m.sqrt(distance_a), m.sqrt(1 - distance_a)) * 2
         return distance_rad * CONFIG.earth_radius
 
     @hybrid_method
