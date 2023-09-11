@@ -14,7 +14,7 @@ from sqlalchemy.orm import Session
 
 from .argparse import parse_argv
 from .config import CONFIG
-from .pic_parse import get_pic_metadata
+from .exif import Exif
 
 if TYPE_CHECKING:
     from collections.abc import Generator
@@ -92,10 +92,8 @@ class BaseRunner(ABC, Generic[_SearchEngine]):
     def run(self) -> None:
         """"""
         args = parse_argv()
-        metadata = get_pic_metadata(args.path)
-        runner = self.SearchEngineClass(
-            lat=metadata.lat, lon=metadata.lon, date=metadata.datetime.date()
-        )
+        exif = Exif(args.path)
+        runner = self.SearchEngineClass(lat=exif.lat, lon=exif.lon, date=exif.date)
         with runner.get_session() as session:
             result = runner.search(session)
             print(
