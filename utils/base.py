@@ -25,9 +25,13 @@ if TYPE_CHECKING:
     from utils.models_base import DataMixin, StationInfoMixin
 
 
-_DataModel = TypeVar("_DataModel", bound="DataMixin[Any]")
-_StationInfoModel = TypeVar("_StationInfoModel", bound="StationInfoMixin[Any]")
-_SearchEngine = TypeVar("_SearchEngine", bound="BaseSearchEngine[Any,Any]")
+_DataModel = TypeVar("_DataModel", bound="DataMixin[Any]", covariant=True)
+_StationInfoModel = TypeVar(
+    "_StationInfoModel", bound="StationInfoMixin[Any]", covariant=True
+)
+_SearchEngine = TypeVar(
+    "_SearchEngine", bound="BaseSearchEngine[DataMixin[Any], StationInfoMixin[Any]]"
+)
 
 
 class BaseSearchEngine(ABC, Generic[_DataModel, _StationInfoModel]):
@@ -95,11 +99,18 @@ class BaseRunner(ABC, Generic[_SearchEngine]):
         """"""
         args = parse_argv()
         exif = Exif(args.path)
-        print(exif.human_str)
+        print(
+            f"The picture is taken at date={exif.date:%x}, time={exif.datetime:%X}, "
+            f"lat={exif.lat:.3f}, lon={exif.lon:.3f}"
+        )
         runner = self.SearchEngineClass(lat=exif.lat, lon=exif.lon, date=exif.date)
         with runner.get_session() as session:
-            result = runner.search(session, include_null_wdsp=args.include_null_wdsp)
-            print(result.human_str)
-            distance = result.station_info.get_distance(lat=exif.lat, lon=exif.lon)
+            data = runner.search(session, include_null_wdsp=args.include_null_wdsp)
+            print(
+                f'The wind speed is {"not available" if data.wdsp is None else data.wdsp} '
+                f'for "{ data.station_info.name or data.station or "closest"}" '
+                f"station on {data.date:%x}"
+            )
+            distance = data.station_info.get_distance(lat=exif.lat, lon=exif.lon)
             if distance is not None:
                 print(f"The distance to the station is {distance:,.3f} km")
