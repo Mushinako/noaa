@@ -2,6 +2,8 @@
 
 ## How to use
 
+Put `noaa.db` in this folder
+
 `python noaa_trig.py --lat 22.6368375 --lon 113.8144431 --date 2000-01-01`
 
 ## Prerequisites
