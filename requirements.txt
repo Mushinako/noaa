@@ -1,6 +1,9 @@
 alembic==1.12.0 ; python_version >= "3.9" and python_version < "4.0" \
     --hash=sha256:03226222f1cf943deee6c85d9464261a6c710cd19b4fe867a3ad1f25afda610f \
     --hash=sha256:8e7645c32e4f200675e69f0745415335eb59a3663f5feb487abfa0b30c45888b
+exif==1.6.0 ; python_version >= "3.9" and python_version < "4.0" \
+    --hash=sha256:2d002b5740eb897da43de1e6a8f4ebacf5171b4d0b8bc0182c70aebde1be86d3 \
+    --hash=sha256:36288d1ffc60030084a04c26f50cc32e19383a36cd234fcfa1fb1c6f698e1d36
 geoalchemy2[shapely]==0.14.1 ; python_version >= "3.9" and python_version < "4.0" \
     --hash=sha256:0830c98f83d6b1706e62b5544793d304e2853493d6e70ac18444c13748c3d1c7 \
     --hash=sha256:620b31cbf97a368b2486dbcfcd36da2081827e933d4163bcb942043b79b545e8
@@ -162,6 +165,8 @@ numpy==1.25.2 ; python_version >= "3.9" and python_version < "4.0" \
 packaging==23.1 ; python_version >= "3.9" and python_version < "4.0" \
     --hash=sha256:994793af429502c4ea2ebf6bf664629d07c1a9fe974af92966e4b8d2df7edc61 \
     --hash=sha256:a392980d2b6cffa644431898be54b0045151319d1e7ec34f0cfed48767dd334f
+plum-py==0.8.7 ; python_version >= "3.9" and python_version < "4.0" \
+    --hash=sha256:d791f059ef159adbe3c3b036557b5b431fa07db226a9de106a74e5e57441741d
 shapely==2.0.1 ; python_version >= "3.9" and python_version < "4.0" \
     --hash=sha256:01224899ff692a62929ef1a3f5fe389043e262698a708ab7569f43a99a48ae82 \
     --hash=sha256:05c51a29336e604c084fb43ae5dbbfa2c0ef9bd6fedeae0a0d02c7b57a56ba46 \
