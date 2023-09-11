@@ -14,7 +14,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.sql import functions
 
 from alembic import op
-from utils.models import StationInfoGis
+from utils.models_gis import StationInfoGis
 
 # revision identifiers, used by Alembic.
 revision: str = "d0689ffa3032"

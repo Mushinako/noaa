@@ -33,8 +33,12 @@ def parse_argv() -> _Args:
     """"""
     parser = ArgumentParser()
 
-    parser.add_argument("--lat", type=_lat_float, help="Latitude (-90 ~ 90)")
-    parser.add_argument("--lon", type=_lon_float, help="Longitude (-180 ~ 180)")
-    parser.add_argument("--date", type=_iso_date, help="Date")
+    parser.add_argument(
+        "--lat", type=_lat_float, help="Latitude (-90 ~ 90)", required=True
+    )
+    parser.add_argument(
+        "--lon", type=_lon_float, help="Longitude (-180 ~ 180)", required=True
+    )
+    parser.add_argument("--date", type=_iso_date, help="Date", required=True)
 
     return parser.parse_args(namespace=_Args())

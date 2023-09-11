@@ -10,7 +10,7 @@ from sqlalchemy.event import listen
 from sqlalchemy.orm import Session
 
 from utils.argparse import parse_argv
-from utils.models import Data, DataGis, StationInfo, StationInfoGis
+from utils.models_gis import DataGis, StationInfoGis
 
 if TYPE_CHECKING:
     from sqlalchemy.engine.base import Engine
@@ -35,21 +35,7 @@ class _Runner:
         self.date = datetime.date.today() if date is None else date
         self.engine = create_engine(_DB, echo=True)
 
-    def search_trig(self) -> Data:
-        """"""
-        with Session(self.engine) as session:
-            with session.begin():
-                cn_stations_stmt = select(StationInfo).where(
-                    StationInfo.country == "中国",
-                    StationInfo.latitude.is_not(None),
-                    StationInfo.longitude.is_not(None),
-                )
-                station_stmt = cn_stations_stmt.limit(1)
-                station = session.scalars(station_stmt).first()
-                if station is None:
-                    raise ValueError("No station found")
-
-    def search_gis(self) -> DataGis:
+    def search(self, session: Session) -> DataGis:
         """"""
         raise NotImplementedError
         listen(self.engine, "connect", load_spatialite)  # pyright: ignore
@@ -70,8 +56,13 @@ def _main() -> None:
     """"""
     args = parse_argv()
     runner = _Runner(lat=args.lat, lon=args.lon, date=args.date)
-    result = runner.search_trig()
-    print(f'Closest wind speed is {data.wdsp} for station "{data.station_info.name}"')
+    with Session(runner.engine) as session:
+        with session.begin():
+            result = runner.search(session)
+            print(
+                f"The wind speed is {result.wdsp} for closest station "
+                f'"{result.station_info.name}" on {result.date.isoformat()}'
+            )
 
 
 if __name__ == "__main__":
