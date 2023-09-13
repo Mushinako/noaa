@@ -8,6 +8,8 @@ from utils.base import BaseRunner, BaseSearchEngine
 from utils.models_trig import Data, StationInfo
 
 if TYPE_CHECKING:
+    from typing import Optional
+
     from sqlalchemy.sql.elements import SQLCoreOperations
 
 
@@ -17,7 +19,7 @@ class _TrigSearchEngine(BaseSearchEngine[Data, StationInfo]):
     DataModel = Data
     StationInfoModel = StationInfo
 
-    def get_distance_comp(self) -> SQLCoreOperations[None | float]:
+    def get_distance_comp(self) -> SQLCoreOperations[Optional[float]]:
         """"""
         return self.StationInfoModel.get_distance(lat=self.lat, lon=self.lon)
 

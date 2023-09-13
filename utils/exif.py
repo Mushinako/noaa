@@ -11,7 +11,7 @@ from exifread.utils import Ratio
 
 if TYPE_CHECKING:
     from pathlib import Path
-    from typing import Any
+    from typing import Any, Optional
 
 
 def _monkey_patch_heic_get_parser() -> None:
@@ -27,7 +27,7 @@ def _monkey_patch_heic_get_parser() -> None:
 
     _old_get_parser = HEICExifFinder.get_parser
 
-    def _get_parser(self: HEICExifFinder, box: Box) -> None | Callable[[Box], None]:
+    def _get_parser(self: HEICExifFinder, box: Box) -> Optional[Callable[[Box], None]]:
         try:
             return _old_get_parser(self, box)
         except NoParser:
@@ -43,7 +43,7 @@ class Exif:
     """"""
 
     path: Path
-    _tags: None | dict[str, Any]
+    _tags: Optional[dict[str, Any]]
 
     def __init__(self, path: Path) -> None:
         self.path = path

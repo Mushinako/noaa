@@ -14,6 +14,8 @@ from .config import CONFIG
 from .models_base import DataMixin, StationInfoMixin
 
 if TYPE_CHECKING:
+    from typing import Optional
+
     from sqlalchemy.sql.elements import ColumnElement
 
 
@@ -28,13 +30,13 @@ class StationInfo(StationInfoMixin["Data"]):
     data: Mapped[list[Data]] = relationship(back_populates="station_info")
 
     @hybrid_method
-    def get_distance(self, *, lat: float, lon: float) -> None | float:
+    def get_distance(self, *, lat: float, lon: float) -> Optional[float]:
         """"""
         return self._calc_distance(lat=lat, lon=lon)
 
     @get_distance.expression
     @classmethod
-    def _(cls, *, lat: float, lon: float) -> ColumnElement[None | float]:
+    def _(cls, *, lat: float, lon: float) -> ColumnElement[Optional[float]]:
         """"""
         # a = sin^2(|lat1-lat2|/2) + sin^2(|lon1-lon2|/2) * cos(lat1) * cos(lat2)
         lat_diff = f.abs(f.radians(cls.latitude) - m.radians(lat))

@@ -18,6 +18,7 @@ from .exif import Exif
 
 if TYPE_CHECKING:
     from collections.abc import Generator
+    from typing import Optional
 
     from sqlalchemy.engine.base import Engine
     from sqlalchemy.sql.elements import SQLCoreOperations
@@ -46,7 +47,7 @@ class BaseSearchEngine(ABC, Generic[_DataModel, _StationInfoModel]):
     StationInfoModel: type[_StationInfoModel]
 
     def __init__(
-        self, *, lat: float, lon: float, date: None | datetime.date = None
+        self, *, lat: float, lon: float, date: Optional[datetime.date] = None
     ) -> None:
         self.lat = lat
         self.lon = lon
@@ -81,7 +82,7 @@ class BaseSearchEngine(ABC, Generic[_DataModel, _StationInfoModel]):
         return data
 
     @abstractmethod
-    def get_distance_comp(self) -> SQLCoreOperations[None | float]:
+    def get_distance_comp(self) -> SQLCoreOperations[Optional[float]]:
         """"""
         raise NotImplementedError
 
