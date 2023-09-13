@@ -6,7 +6,7 @@ authors = ["Mushinako <github@mushinako.me>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.10"
 alembic = "^1.12.0"
 ExifRead = "^3.0.0"
 GeoAlchemy2 = { extras = ["shapely"], version = "^0.14.1" }
