@@ -109,7 +109,7 @@ class BaseRunner(ABC, Generic[_SearchEngine]):
             data = runner.search(session, include_null_wdsp=args.include_null_wdsp)
             print(
                 f'The wind speed is {"not available" if data.wdsp is None else data.wdsp} '
-                f'for "{ data.station_info.name or data.station or "closest"}" '
+                f'for "{data.station_info.name or data.station or "closest"}" '
                 f"station on {data.date:%x}"
             )
             distance = data.station_info.get_distance(lat=exif.lat, lon=exif.lon)
